@@ -1,0 +1,37 @@
+---
+
+# This is run as user govready on 'dashboard'
+# Consider using the govready installer instead of cloning...
+
+- name: Clone GovReady repository
+  git: repo=https://github.com/GovReady/govready.git
+       dest="govready"
+
+- name: Create bin/ subdirectory
+  file: path=bin state=directory
+
+- name: Create link to govready executable
+  file: src="/home/govready/govready/govready"
+        dest="/home/govready/bin/govready"
+        state=link
+
+- name: Create myfisma/ subdirectory
+  file: path=/home/govready/myfisma state=directory
+
+- name: Initialize GovReady
+  command: chdir=/home/govready/myfisma /home/govready/bin/govready init
+
+- name: Rename default GovReadyfile to GovReadyfile.init
+  command: mv /home/govready/myfisma/GovReadyfile /home/govready/myfisma/GovReadyfile.init
+
+- name: Install GovReadyfile for 192.168.56.102 centos7 machine
+  copy: src=GovReadyfile
+        dest=/home/govready/myfisma/GovReadyfile
+
+- name: Remove myfisma/scap directory
+  file: path=/home/govready/myfisma/scap state=absent
+
+- name: Create link to SCAP content
+  file: src="/home/govready/scap-security-guide/RHEL/7/dist/content"
+        dest="/home/govready/myfisma/scap"
+        state=link force=yes
