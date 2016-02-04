@@ -1,0 +1,9 @@
+---
+govready_repo: "https://github.com/GovReady/govready.git"
+govready_repo_local_destination: "/usr/local/govready"
+govready_executable_src: "/usr/local/govready/govready"
+govready_executable_link: "/usr/local/bin/govready"
+govready_myfisma_directory: "~/myfisma"
+govready_configuration_file: "~/myfisma/GovReadyfile"
+govready_scap_content_directory: "/usr/local/scap-security-guide/RHEL/7/dist/content/"
+govready_scap_myfisma_directory: "~/myfisma/scap"
