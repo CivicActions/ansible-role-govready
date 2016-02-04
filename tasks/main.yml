@@ -23,10 +23,15 @@
     state: directory
 
 - name: Initialize GovReady
-  command: chdir="{{ govready_myfisma_directory }}" govready init
+  command: govready init
+  args:
+    chdir: "{{ govready_myfisma_directory }}"
+    creates: "{{ govready_configuration_file }}"
 
 - name: Rename default GovReadyfile to GovReadyfile.init
-  command: mv "{{ govready_configuration_file }}" "{{ govready_configuration_file }}".init
+  command: mv -f "{{ govready_configuration_file }}" "{{ govready_configuration_file }}.init"
+  args:
+    creates: "{{ govready_configuration_file }}.init"
 
 - name: Install GovReadyfile for 192.168.56.102 centos7 machine
   copy:
