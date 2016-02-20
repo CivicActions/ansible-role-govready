@@ -6,7 +6,17 @@ GovReady is a super easy to use commandline toolkit for running security scans o
 
 GovReady depends upon the [OpenSCAP role](https://galaxy.ansible.com/openprivacy/openscap) being installed, which in turn depends upon the [SCAP Security Guide role](https://galaxy.ansible.com/openprivacy/scap-security-guide).
 
-### Work in Progress
+## Testing
+
+Change to the `tests` directory to run tests locally.
+
+```ShellSession
+$ cd tests
+```
+
+The `tests` directory contains tests for this role in the form of a Vagrant environment. See the [tests README](tests/README.md) for instructions.
+
+## Work in Progress
 This role is a work in progress (WIP). It is not ready for general use as paths are currently hardwired, and there are likely other, non-portable issues.
 
 ### License

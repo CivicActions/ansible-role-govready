@@ -1,0 +1,17 @@
+---
+
+- name: All machines get OpenSCAP scanner, login banner and audit rules
+  hosts: all
+  become: true
+  roles:
+    - { role: openprivacy.openscap }
+#   - { role: harden }
+
+# In the general case, the dashboard will run the server provisioning,
+# hardening and scanning processes via ansible and govready.
+- name: Install SCAP Security Content (SSG) and GovReady on 'dashboard'
+  hosts: dashboard
+  roles:
+    - { role: geerlingguy.git, become: true }
+    - { role: openprivacy.scap-security-guide, become: true }
+    - { role: openprivacy.govready }
