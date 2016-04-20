@@ -2,11 +2,13 @@
 
 This directory contains tests for the openprivacy.govready role in the form of a Vagrant environment.
 
-### Test setup
+## Test setup
 
 The directory `roles/govready` is a symbolic link that should point to the root of this project in order to work. To create it, do:
 
 ```ShellSession
+$ ansible-galaxy install openprivacy.govready -p .
+$ cd openprivacy.govready/tests
 $ mkdir roles
 # govready has dependencies openscap and scap-security-guide
 $ for ROLE in govready openscap scap-security-guide; do
@@ -59,3 +61,14 @@ govready scan
 - This profile identifies 4 high severity selected controls. OpenSCAP says 3 passing, 0 failing, and 1 notchecked.
 - This profile identifies 12 medium severity selected controls. OpenSCAP says 12 passing, 0 failing, and 0 notchecked.
 - This profile identifies 45 low severity selected controls. OpenSCAP says 13 passing, 30 failing, and 2 notchecked.
+
+### Dashboard: Execute automated fixes with remediation functions and run a third scan of 'server'
+
+```ShellSession
+ssh root@192.168.56.102 mkdir /usr/share/scap-security-guide
+scp /usr/share/scap-security-guide/remediation_functions 192.168.56.102:/usr/share/scap-security-guide
+```
+
+This profile identifies 4 high severity selected controls. OpenSCAP says 3 passing, 0 failing, and 1 notchecked.
+This profile identifies 12 medium severity selected controls. OpenSCAP says 12 passing, 0 failing, and 0 notchecke.d
+This profile identifies 45 low severity selected controls. OpenSCAP says 40 passing, 3 failing, and 2 notchecked.
