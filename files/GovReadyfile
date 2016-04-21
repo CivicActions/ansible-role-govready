@@ -13,9 +13,10 @@ SCANDIR = scans
 # Default profile to be used with 'govready scan' command
 PROFILE = xccdf_org.ssgproject.content_profile_stig-rhel7-server-upstream
 
-# All three vars must be set 'OSCAP_USER@OSCAP_HOST OSCAP_PORT' for remote scanning.
+# All four vars must be set 'sudo OSCAP_USER@OSCAP_HOST OSCAP_PORT' for remote scanning.
 # Note that openscap-scanner ('oscap') must be installed on the remote server.
-OSCAP_USER = root
+OSCAP_SUDO = sudo
+OSCAP_USER = oscap-user
 OSCAP_HOST = 192.168.56.102
 OSCAP_PORT = 22
 
