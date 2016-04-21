@@ -41,13 +41,6 @@ $ ./create_keys.sh
 $ vagrant up
 ```
 
-_Note: Sometimes the server instance fails to create with lots of errors including e.g. `repomd.xml does not match metalink for epel`. If this happens, retry building the server (and it always seems to work the second time) with these two commands:_
-
-```bash
-$ vagrant destroy server
-$ vagrant up server
-```
-
 ### Dashboard: Run the first scan of 'server'
 _Note: The myfisma/GovReadyfile was set up during provisioning._
 
@@ -61,10 +54,6 @@ Since this is the first time that the Dashboard is connecting to the Server, you
 
 `Are you sure you want to continue connecting (yes/no)? `_yes_
 
-You will also be asked for a password, which is "vagrant":
-
-`root@192.168.56.102's password: `_vagrant_
-
 ### Dashboard: Interpreting results
 
 - This profile identifies 23 high severity selected controls. OpenSCAP says 16 passing, 5 failing, and 2 notchecked.
@@ -73,21 +62,13 @@ You will also be asked for a password, which is "vagrant":
 
 ### Dashboard: Execute automated fixes and run a second scan of 'server'
 
+_Note: The process for remediation has changed and the following is untested and may cause the `server` instance to become unreachable._
+
 ```bash
 [vagrant@localhost myfisma]$ govready fix
 [vagrant@localhost myfisma]$ govready scan
+
+## or ##
+
+[vagrant@localhost myfisma]$ oscap-ssh sudo oscap-user@192.168.56.102 22 xccdf eval --remediate --profile xccdf_org.ssgproject.content_profile_stig-rhel7-server-upstream --results scans/remediation-results.xml --fetch-remote-resources scap/ssg-centos7-ds.xml
 ```
-- This profile identifies 4 high severity selected controls. OpenSCAP says 3 passing, 0 failing, and 1 notchecked.
-- This profile identifies 12 medium severity selected controls. OpenSCAP says 12 passing, 0 failing, and 0 notchecked.
-- This profile identifies 45 low severity selected controls. OpenSCAP says 13 passing, 30 failing, and 2 notchecked.
-
-### Dashboard: Execute automated fixes with remediation functions and run a third scan of 'server'
-
-```bash
-$ ssh root@192.168.56.102 mkdir /usr/share/scap-security-guide
-$ scp /usr/share/scap-security-guide/remediation_functions 192.168.56.102:/usr/share/scap-security-guide
-```
-
-- This profile identifies 4 high severity selected controls. OpenSCAP says 3 passing, 0 failing, and 1 notchecked.
-- This profile identifies 12 medium severity selected controls. OpenSCAP says 12 passing, 0 failing, and 0 notchecke.d
-- This profile identifies 45 low severity selected controls. OpenSCAP says 40 passing, 3 failing, and 2 notchecked.
