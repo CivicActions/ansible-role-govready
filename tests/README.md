@@ -1,5 +1,10 @@
 # Example Playbook for ansible-role-govready
 
+## Requirements
+
+- ansible v1.9.1 or higher
+- vagrant v1.7.4 or higher
+
 This directory contains tests for the openprivacy.govready role in the form of a Vagrant environment.
 
 ## Test setup
@@ -17,7 +22,7 @@ $ cd openprivacy.govready/tests
 $ mkdir roles
 # govready has dependencies openscap and scap-security-guide
 $ for ROLE in govready openscap scap-security-guide; do
-    ln -frs ../../openprivacy.${ROLE} roles
+    ln -fs ../../../openprivacy.${ROLE} roles/openprivacy.${ROLE}
 done
 ```
 
