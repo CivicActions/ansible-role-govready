@@ -24,6 +24,10 @@ $ mkdir roles
 $ for ROLE in govready openscap scap-security-guide; do
     ln -fs ../../../openprivacy.${ROLE} roles/openprivacy.${ROLE}
 done
+# OS X does not require `-r` flag to create symbolic links, so Mac users do this intead
+$ for ROLE in govready openscap scap-security-guide; do
+    ln -fs ../../openprivacy.${ROLE} roles
+done
 ```
 
 You may want to change the base box into one that you like. The current one is based on geerlingguy's [CentOS 7 box](https://atlas.hashicorp.com/geerlingguy/boxes/centos7).
