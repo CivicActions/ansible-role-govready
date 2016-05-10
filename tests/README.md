@@ -65,6 +65,10 @@ Since this is the first time that the Dashboard is connecting to the Server, you
 - This profile identifies 98 medium severity selected controls. OpenSCAP says 36 passing, 60 failing, and 2 notchecked.
 - This profile identifies 60 low severity selected controls. OpenSCAP says 12 passing, 43 failing, and 5 notchecked.
 
+### Host: `./scans/` directory
+
+Look in the newly created `./scans/` directory for the results of the OpenSCAP scan of the `server` instance.
+
 ### Dashboard: Execute automated fixes and run a second scan of 'server'
 
 _Note: The process for remediation has changed and the following is untested and may cause the `server` instance to become unreachable._
@@ -77,3 +81,8 @@ _Note: The process for remediation has changed and the following is untested and
 
 [vagrant@localhost myfisma]$ oscap-ssh sudo oscap-user@192.168.56.102 22 xccdf eval --remediate --profile xccdf_org.ssgproject.content_profile_stig-rhel7-server-upstream --results scans/remediation-results.xml --fetch-remote-resources scap/ssg-centos7-ds.xml
 ```
+
+## Next steps:
+
+- Refactor, probably to Python
+- Accept a (yaml) configuration file to define the dashboard and a set of servers
