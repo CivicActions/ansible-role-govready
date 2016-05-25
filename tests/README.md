@@ -5,25 +5,18 @@
 - ansible v1.9.1 or higher
 - vagrant v1.7.4 or higher
 
-This directory contains tests for the openprivacy.govready role in the form of a Vagrant environment.
+This directory contains tests for the CivicActions.govready role in the form of a Vagrant environment.
 
 ## Test setup
 
-The directory `roles/govready` is a symbolic link that should point to the root of this project in order to work. To create it, do:
+Install the `govready` role into a newly created `roles/` directory and add two supporting roles: the openscap scanner and the scap-security-guide content:
 
 ```bash
-$ ansible-galaxy install openprivacy.govready -p .
-```
-
-_Note: If you see_ `[DEPRECATION WARNING]: The comma separated role spec format...` _you can ignore it. There is an [ansible pull request](https://github.com/ansible/ansible/pull/14612) to resolve this._
-
-```bash
-$ cd openprivacy.govready/tests
+$ ansible-galaxy install CivicActions.govready -p .
+$ cd CivicActions.govready/tests
 $ mkdir roles
-# govready has dependencies openscap and scap-security-guide
-$ for ROLE in govready openscap scap-security-guide; do
-    ln -fs ../../../openprivacy.${ROLE} roles/openprivacy.${ROLE}
-done
+$ ansible-galaxy install CivicActions.openscap CivicActions.scap-security-guide -p roles
+$ ln -fs ../../../CivicActions.govready roles/CivicActions.govready
 ```
 
 You may want to change the base box into one that you like. The current one is based on geerlingguy's [CentOS 7 box](https://atlas.hashicorp.com/geerlingguy/boxes/centos7).
@@ -69,7 +62,21 @@ Since this is the first time that the Dashboard is connecting to the Server, you
 
 Look in the newly created `./scans/` directory for the results of the OpenSCAP scan of the `server` instance.
 
-### Dashboard: Execute automated fixes and run a second scan of 'server'
+### Dashboard: Scan your own sites
+
+By setting the environment variables `GOVREADY_OSCAP_USER` (must have sudo capability) and `GOVREADY_OSCAP_HOST` you can scan any host that has openscap installed. E.g.,
+
+```bash
+	[vagrant@localhost myfisma]$ export GOVREADY_OSCAP_USER=rootable
+	[vagrant@localhost myfisma]$ export GOVREADY_OSCAP_HOST=myhost.example.com
+	[vagrant@localhost myfisma]$ govready scan
+```
+
+All the variables in UPPER case in the GovReadyFile can be overridden with environment variables prefixed with `GOVREADY_`
+
+Note that the remote sites don't need govready nor the scap-security-guide, but they will need the OpenSCAP scanner. See the README for ansible-roles-openscap for information on how to install the latest copy.
+
+### Remediation. This section is a work in progress
 
 _Note: The process for remediation has changed and the following is untested and may cause the `server` instance to become unreachable._
 

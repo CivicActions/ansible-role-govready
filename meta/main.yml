@@ -1,7 +1,5 @@
 ---
-dependencies:
-  - { role: openprivacy.openscap }
-  - { role: openprivacy.scap-security-guide }
+dependencies: []
 
 galaxy_info:
   author: openprivacy
