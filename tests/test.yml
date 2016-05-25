@@ -1,10 +1,10 @@
 ---
 
-- name: All machines get OpenSCAP scanner, git, and an oscap-user account.
+- name: All test instances get OpenSCAP scanner and an oscap-user account.
   hosts: all
   become: true
   roles:
-    - { role: openprivacy.openscap }
+    - { role: CivicActions.openscap, oscap_user: oscap-user }
 #   - { role: harden }
 
 # In the general case, the dashboard will run the server provisioning,
@@ -12,9 +12,8 @@
 - name: Install SCAP Security Content (SSG) and GovReady on 'dashboard'
   hosts: dashboard
   roles:
-#   - { role: geerlingguy.git, become: true }
-    - { role: openprivacy.scap-security-guide, become: true }
-    - { role: openprivacy.govready }
+    - { role: CivicActions.scap-security-guide, become: true }
+    - { role: CivicActions.govready }
   tasks:
   - name: Upload the local oscap-user private key to the dashboard user account.
     copy: src=keys/id_rsa
@@ -22,11 +21,10 @@
           force=no
           mode=0600
 
-- name: Add oscap-user public key to server instances.
+- name: Add oscap-user public key to testing server instances.
   hosts: server
   tasks:
   - authorized_key: user=oscap-user key="{{ item }}"
     with_file:
       - keys/id_rsa.pub
     become: true
-    
