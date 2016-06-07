@@ -55,7 +55,7 @@ Since this is the first time that the Dashboard is connecting to the Server, you
 ### Dashboard: Interpreting results
 
 - This profile identifies 23 high severity selected controls. OpenSCAP says 16 passing, 5 failing, and 2 notchecked.
-- This profile identifies 98 medium severity selected controls. OpenSCAP says 36 passing, 60 failing, and 2 notchecked.
+- This profile identifies 96 medium severity selected controls. OpenSCAP says 34 passing, 60 failing, and 2 notchecked.
 - This profile identifies 60 low severity selected controls. OpenSCAP says 12 passing, 43 failing, and 5 notchecked.
 
 ### Host: `./scans/` directory
@@ -78,16 +78,41 @@ Note that the remote sites don't need govready nor the scap-security-guide, but 
 
 ### Remediation. This section is a work in progress
 
-_Note: The process for remediation has changed and the following is untested and may cause the `server` instance to become unreachable._
+_Note: The process for remediation is in flux and `govready fix` no longer works. Currently we are using the [simple-harden](https://galaxy.ansible.com/CivicActions/simple-harden/) role which is still being tested._
 
+For testing with your vagrant boxes created above, first install the `simple-harden` role:
 ```bash
-[vagrant@localhost myfisma]$ govready fix
-[vagrant@localhost myfisma]$ govready scan
-
-## or ##
-
-[vagrant@localhost myfisma]$ oscap-ssh sudo oscap-user@192.168.56.102 22 xccdf eval --remediate --profile xccdf_org.ssgproject.content_profile_stig-rhel7-server-upstream --results scans/remediation-results.xml --fetch-remote-resources scap/ssg-centos7-ds.xml
+ansible-galaxy install CivicActions.simple-harden -p roles
 ```
+
+Then create two files:
+
+1: `harden-inventory`:
+```bash
+localhost      ansible_connection=local ansible_python_interpreter=/usr/bin/python2
+
+[servers]
+192.168.56.102 	ansible_ssh_user=vagrant
+```
+
+2: `harden-playbook.yml`:
+```bash
+- name: Harden all servers
+  hosts: servers
+  roles:
+    - { role: CivicActions.simple-harden, become: true }
+```
+
+Then run the harden process:
+```bash
+ansible-playbook -i harden-inventory harden-playbook.yml
+```
+
+The results can be seen by logging into the dashboard again and re-running `govready scan`:
+
+- This profile identifies 23 high severity selected controls. OpenSCAP says 18 passing, 3 failing, and 2 notchecked.
+- This profile identifies 96 medium severity selected controls. OpenSCAP says 62 passing, 32 failing, and 2 notchecked.
+- This profile identifies 60 low severity selected controls. OpenSCAP says 40 passing, 15 failing, and 5 notchecked.
 
 ## Next steps:
 
