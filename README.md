@@ -16,7 +16,7 @@ Change to the `tests` directory to run tests locally.
 $ cd tests
 ```
 
-The `tests` directory contains tests for this role in the form of a Vagrant environment. See the [tests README](tests/README.md) for instructions.
+The `tests` directory contains tests for this role in the form of a Vagrant environment. See the [tests README](https://github.com/CivicActions/ansible-role-govready/blob/master/tests/README.md) for instructions.
 
 ## Work in Progress
 This role is a work in progress (WIP). It has been used in production, but it is not considered "production ready". Please use at your own risk.
