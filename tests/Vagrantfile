@@ -15,6 +15,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   hosts.each do |host|
     config.vm.define host['name'] do |node|
       node.vm.box = host['box'] ||= DEFAULT_BASE_BOX
+      node.vm.box_check_update = true
+      node.ssh.insert_key = false
       node.vm.network :private_network, ip: host['ip']
       node.vm.synced_folder ".", "/vagrant", group: "vagrant", owner: "vagrant", create: true
       node.vm.provider "virtualbox" do |vb|
