@@ -39,6 +39,12 @@ $ ./create_keys.sh
 $ vagrant up
 ```
 
+Sometimes the networking is not initialized correctly but a stop/restart cycle will fix that:
+```bash
+$ vagrant halt
+$ vagrant up
+```
+
 ### Dashboard: Run the first scan of 'server'
 _Note: The myfisma/GovReadyfile was set up during provisioning._
 
@@ -54,13 +60,15 @@ Since this is the first time that the Dashboard is connecting to the Server, you
 
 ### Dashboard: Interpreting results
 
-- This profile identifies 23 high severity selected controls. OpenSCAP says 16 passing, 5 failing, and 2 notchecked.
-- This profile identifies 96 medium severity selected controls. OpenSCAP says 34 passing, 60 failing, and 2 notchecked.
-- This profile identifies 60 low severity selected controls. OpenSCAP says 12 passing, 43 failing, and 5 notchecked.
+The `govready` script provides a ("quickie report") summary of the scan results. Most Authorizing Officials will want all High and Medium controls remediated or waivers and an Acceptance of Risk report may need to be filed.
 
-### Host: `./scans/` directory
+- This profile identifies 31 high severity selected controls. OpenSCAP says 18 passing, 10 failing, and 3 notchecked.
+- This profile identifies 110 medium severity selected controls. OpenSCAP says 43 passing, 66 failing, and 1 notchecked.
+- This profile identifies 54 low severity selected controls. OpenSCAP says 11 passing, 37 failing, and 5 notchecked.
 
-Look in the newly created `./scans/` directory for the results of the OpenSCAP scan of the `server` instance.
+### Host: `./dashboard/scans/` directory
+
+Look in the newly created `./dashboard/scans/` directory for the complete results of the OpenSCAP scan of the `server` instance (IP = 192.168.56.102).
 
 ### Dashboard: Scan your own sites
 

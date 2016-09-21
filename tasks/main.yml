@@ -32,10 +32,19 @@
   stat: path=/vagrant
   register: vagrant_canary
 
-- name: Sync myfisma/scans directory in /vagrant (if in a vagrant instance).
-  shell: mv "scans" /vagrant && ln -s /vagrant/scans .
+- name: Move myfisma/scans directory to /vagrant (if in a vagrant instance).
+  command: mv scans /vagrant
   args:
     chdir: "{{ govready_myfisma_directory }}"
+    creates: "{{ govready_vagrant_scans }}"
+  when: vagrant_canary.stat.exists
+
+- name: Create link from /vagrant/scans to govready_myfisma_directory
+  file:
+    src: "{{ govready_vagrant_scans }}"
+    dest: "{{ govready_myfisma_scans }}"
+    state: link
+    force: yes
   when: vagrant_canary.stat.exists
 
 - name: Rename default GovReadyfile to GovReadyfile.init

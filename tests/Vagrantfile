@@ -12,19 +12,22 @@ DEFAULT_BASE_BOX = 'geerlingguy/centos7'
 hosts = YAML.load_file('vagrant_hosts.yml')
   
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # Create the dashboard and server instances.
   hosts.each do |host|
     config.vm.define host['name'] do |node|
-      node.vm.box = host['box'] ||= DEFAULT_BASE_BOX
-      node.vm.box_check_update = true
+      # https://github.com/mitchellh/vagrant/issues/7610
       node.ssh.insert_key = false
+      node.vm.box = host['box'] ||= DEFAULT_BASE_BOX
       node.vm.network :private_network, ip: host['ip']
-      node.vm.synced_folder ".", "/vagrant", group: "vagrant", owner: "vagrant", create: true
+      node.vm.synced_folder host['name'], "/vagrant",
+                            group: "vagrant", owner: "vagrant", create: true
       node.vm.provider "virtualbox" do |vb|
         vb.name = host['name']
-        vb.customize ['modifyvm', :id, '--groups', PROJECT_NAME]
+        # vb.customize ['modifyvm', :id, '--groups', PROJECT_NAME]
       end
     end
   end
+  # Provision the instances.
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "test.yml"
   end
