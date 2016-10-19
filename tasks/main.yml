@@ -26,37 +26,36 @@
   command: govready init
   args:
     chdir: "{{ govready_myfisma_directory }}"
-    creates: "{{ govready_configuration_file }}"
+    creates: "{{ govready_myfisma_configuration_file }}"
 
-- name: Are we in a vagrant instance?
-  stat: path=/vagrant
+- name: Are we in a vagrant instance? (Imperfect test for /home/vagrant)
+  stat: path=/home/vagrant
   register: vagrant_canary
 
-- name: Move myfisma/scans directory to /vagrant (if in a vagrant instance).
-  command: mv scans /vagrant
+- name: Move "{{ govready_myfisma_scans_directory }}" to "{{ govready_share_directory }}" (if in a vagrant instance).
+  command: mv scans "{{ govready_share_directory }}"
   args:
     chdir: "{{ govready_myfisma_directory }}"
-    creates: "{{ govready_vagrant_scans_directory }}"
+    creates: "{{ govready_share_scans_directory }}"
   when: vagrant_canary.stat.exists
-  become: true
 
-- name: Create link from /vagrant/scans to govready_myfisma_directory
+- name: Create link from "{{ govready_share_scans_directory }}" to "{{ govready_myfisma_directory }}"
   file:
-    src: "{{ govready_vagrant_scans_directory }}"
+    src: "{{ govready_share_scans_directory }}"
     dest: "{{ govready_myfisma_scans_directory }}"
     state: link
     force: yes
   when: vagrant_canary.stat.exists
 
 - name: Rename default GovReadyfile to GovReadyfile.init
-  command: mv -f "{{ govready_configuration_file }}" "{{ govready_configuration_file }}.init"
+  command: mv -f "{{ govready_myfisma_configuration_file }}" "{{ govready_myfisma_configuration_file }}.init"
   args:
-    creates: "{{ govready_configuration_file }}.init"
+    creates: "{{ govready_myfisma_configuration_file }}.init"
 
 - name: Install GovReadyfile for 192.168.56.102 centos7 machine
   copy:
     src: GovReadyfile
-    dest: "{{ govready_configuration_file }}"
+    dest: "{{ govready_myfisma_configuration_file }}"
 
 - name: Remove myfisma/scap directory
   file:
