@@ -12,5 +12,5 @@ usage() {
 [ -d keys ] || mkdir keys
 [ -f keys/id_rsa ] && usage
 
-ssh-keygen -b 2048 -t rsa -P '' -f keys/id_rsa
+ssh-keygen -b 2048 -t rsa -P '' -f keys/id_rsa -C 'oscap-user@server'
 ls -l keys
