@@ -3,7 +3,7 @@
 ## Requirements
 
 - ansible v1.9.1 or higher
-- vagrant v1.7.4 or higher
+- vagrant v1.8.6 or higher (1.8.5 has [ssh key issues](https://github.com/mitchellh/vagrant/issues/7610))
 
 This directory contains tests for the CivicActions.govready role in the form of a Vagrant environment.
 
@@ -19,7 +19,7 @@ $ ansible-galaxy install CivicActions.openscap CivicActions.scap-security-guide 
 $ ln -fs ../../../CivicActions.govready roles/CivicActions.govready
 ```
 
-You may want to change the base box into one that you like. The current one is based on geerlingguy's [CentOS 7 box](https://atlas.hashicorp.com/geerlingguy/boxes/centos7).
+You may want to change the base box into one that you like. The current one is based on hashicorp's [CentOS 7 box](https://atlas.hashicorp.com/centos/boxes/7).
 
 The playbook [`test.yml`](tests/test.yml) applies the role to a VM, setting role variables.
 
@@ -36,12 +36,6 @@ First create an SSH key pair to be used by oscap-user, then create and provision
 
 ```bash
 $ ./create_keys.sh
-$ vagrant up
-```
-
-Sometimes the networking is not initialized correctly but a stop/restart cycle will fix that:
-```bash
-$ vagrant halt
 $ vagrant up
 ```
 
@@ -62,9 +56,9 @@ Since this is the first time that the Dashboard is connecting to the Server, you
 
 The `govready` script provides a ("quickie report") summary of the scan results. Most Authorizing Officials will want all High and Medium controls remediated or waivers and an Acceptance of Risk report may need to be filed.
 
-- This profile identifies 31 high severity selected controls. OpenSCAP says 18 passing, 10 failing, and 3 notchecked.
-- This profile identifies 110 medium severity selected controls. OpenSCAP says 43 passing, 66 failing, and 1 notchecked.
-- This profile identifies 54 low severity selected controls. OpenSCAP says 11 passing, 37 failing, and 5 notchecked.
+- This profile identifies 33 high severity selected controls. OpenSCAP says 21 passing, 10 failing, and 2 notchecked.
+- This profile identifies 124 medium severity selected controls. OpenSCAP says 49 passing, 73 failing, and 2 notchecked.
+- This profile identifies 61 low severity selected controls. OpenSCAP says 16 passing, 38 failing, and 6 notchecked.
 
 ### Host: `./dashboard/scans/` directory
 
@@ -88,6 +82,11 @@ Note that the remote sites don't need govready nor the scap-security-guide, but 
 
 _Note: The process for remediation is in flux and `govready fix` no longer works. Currently we are using the [simple-harden](https://galaxy.ansible.com/CivicActions/simple-harden/) role which is still being tested._
 
+OpenSCAP remediation:
+```
+oscap-ssh sudo oscap-user@192.168.56.102 22 xccdf eval --remediate --profile xccdf_org.ssgproject.content_profile_stig-rhel7-server-upstream --results scans/remediation-results.xml --fetch-remote-resources scap/ssg-centos7-ds.xml
+```
+
 For testing with your vagrant boxes created above, first install the `simple-harden` role:
 ```bash
 ansible-galaxy install CivicActions.simple-harden -p roles
@@ -100,7 +99,7 @@ Then create two files:
 localhost      ansible_connection=local ansible_python_interpreter=/usr/bin/python2
 
 [servers]
-192.168.56.102 	ansible_ssh_user=vagrant
+192.168.56.102 ansible_ssh_user=vagrant
 ```
 
 2: `harden-playbook.yml`:

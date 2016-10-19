@@ -6,8 +6,8 @@ require 'yaml'
 VAGRANTFILE_API_VERSION = '2'
 PROJECT_NAME = '/' + File.basename(Dir.getwd)
 
-# Set your default base box here
-DEFAULT_BASE_BOX = 'geerlingguy/centos7'
+# Set your default base box here.
+DEFAULT_BASE_BOX = 'centos/7'
 
 hosts = YAML.load_file('vagrant_hosts.yml')
   
@@ -15,15 +15,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Create the dashboard and server instances.
   hosts.each do |host|
     config.vm.define host['name'] do |node|
-      # https://github.com/mitchellh/vagrant/issues/7610
-      node.ssh.insert_key = false
       node.vm.box = host['box'] ||= DEFAULT_BASE_BOX
-      node.vm.network :private_network, ip: host['ip']
-      node.vm.synced_folder host['name'], "/vagrant",
+      node.vm.network "private_network", ip: host['ip']
+      node.vm.synced_folder ".", "/vagrant",
                             group: "vagrant", owner: "vagrant", create: true
       node.vm.provider "virtualbox" do |vb|
         vb.name = host['name']
-        # vb.customize ['modifyvm', :id, '--groups', PROJECT_NAME]
+        vb.customize ['modifyvm', :id, '--groups', PROJECT_NAME]
       end
     end
   end

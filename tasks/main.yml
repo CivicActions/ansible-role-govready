@@ -36,13 +36,14 @@
   command: mv scans /vagrant
   args:
     chdir: "{{ govready_myfisma_directory }}"
-    creates: "{{ govready_vagrant_scans }}"
+    creates: "{{ govready_vagrant_scans_directory }}"
   when: vagrant_canary.stat.exists
+  become: true
 
 - name: Create link from /vagrant/scans to govready_myfisma_directory
   file:
-    src: "{{ govready_vagrant_scans }}"
-    dest: "{{ govready_myfisma_scans }}"
+    src: "{{ govready_vagrant_scans_directory }}"
+    dest: "{{ govready_myfisma_scans_directory }}"
     state: link
     force: yes
   when: vagrant_canary.stat.exists
@@ -59,12 +60,12 @@
 
 - name: Remove myfisma/scap directory
   file:
-    path: "{{ govready_scap_myfisma_directory }}"
+    path: "{{ govready_myfisma_scap_directory }}"
     state: absent
 
 - name: Create link to SCAP content
   file:
     src: "{{ govready_scap_content_directory }}"
-    dest: "{{ govready_scap_myfisma_directory }}"
+    dest: "{{ govready_myfisma_scap_directory }}"
     state: link
     force: yes
